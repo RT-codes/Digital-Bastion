@@ -1,0 +1,21 @@
+:root {
+}
+
+.root-panel {
+    align-content: flex-end;
+    justify-content: center;
+}
+
+.bar-container {
+    gap: 10px;
+}
+
+
+.bar-action-button {
+    .unity-image {
+/* set image to overflow: hidden to prevent image from overflowing the button */
+        image-overflow: hidden;
+        width: 100%;
+        height: 100%;
+    }
+}
