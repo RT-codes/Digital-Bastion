@@ -243,11 +243,12 @@ MonoBehaviour:
   damageToBase: 10
   nodeDetectionRadius: 0.28
   pathRebuildInterval: 0.15
-  turnSpeed: 20.8
-  speedLerpRate: 1
+  turnSpeed: 14.5
+  speedLerpRate: 0.8
   minFollowSpeed: 0.3
   reservationLookahead: 2
-  positionSmoothTime: 0.1
+  replanCooldown: 0.5
+  positionSmoothTime: 0.202
 --- !u!54 &7316802829631915330
 Rigidbody:
   m_ObjectHideFlags: 0

@@ -1584,11 +1584,11 @@ MonoBehaviour:
   gridManager: {fileID: 1010710949}
   waveManager:
     currentWave: 0
-    maxWaves: 10
+    maxWaves: 20
     timeBetweenWaves: 2
-    spawnIntervalReductionRate: 0.6
-    enemyCountIncreaseRate: 1.5
-    minSpawnInterval: 0.1
+    spawnIntervalReductionRate: 0.9
+    enemyCountIncreaseRate: 1.1
+    minSpawnInterval: 0.15
     spawnInterval: 1
     enemySpeedMultiplier: 1
     enemyPrefabs:
