@@ -33,11 +33,28 @@ public class Build_Manager : MonoBehaviour
     private List<GridNode> reservedNodes = new List<GridNode>();
     private List<Material> createdPreviewMaterials = new List<Material>();
 
+    // Time-scaling during placement
+    [Header("Time Scaling (Placement)")]
+    [Tooltip("When true, game time will be slowed while a placement preview is active.")]
+    public bool slowTimeDuringPlacement = true;
+    [Range(0.01f, 1f)]
+    [Tooltip("Target Time.timeScale value while placing (0.1 = 10% speed).")]
+    public float placementTimeScale = 0.2f;
+
+    // internal storage for restoring time settings
+    private float previousTimeScale = 1f;
+    private float originalFixedDeltaTime = 0.02f;
+    private bool timeScaleModified = false;
+
     void Awake()
     {
         // Implement singleton pattern
         if (Instance == null) Instance = this;
         else if (Instance != this) Destroy(this.gameObject);
+
+        // Capture original time settings so we can restore them after placement
+        originalFixedDeltaTime = Time.fixedDeltaTime;
+        previousTimeScale = Time.timeScale;
     }
 
     void Start()
@@ -94,6 +111,9 @@ public class Build_Manager : MonoBehaviour
         SetupPreviewMaterials(previewInstance);
 
         isPlacing = true;
+
+        // Apply slowed time while the player is placing an object
+        ApplyPlacementTimeScale();
     }
 
     // summary: Begin placement mode for the provided prefab using the supplied footprint.
@@ -111,6 +131,9 @@ public class Build_Manager : MonoBehaviour
         currentPrefab = null;
         isPlacing = false;
         reservedNodes.Clear();
+
+        // Restore normal time scale when placement ends
+        RestoreTimeScale();
     }
 
     // summary: Cancel any active placement preview and release reserved nodes.
@@ -137,6 +160,29 @@ public class Build_Manager : MonoBehaviour
 
         // Finish placement
         CancelPlacement();
+    }
+
+    // Helper: apply placement time scale
+    private void ApplyPlacementTimeScale()
+    {
+        if (!slowTimeDuringPlacement) return;
+        if (timeScaleModified) return;
+
+        previousTimeScale = Time.timeScale;
+        Time.timeScale = Mathf.Clamp(placementTimeScale, 0.01f, 1f);
+        Time.fixedDeltaTime = originalFixedDeltaTime * Time.timeScale;
+        timeScaleModified = true;
+        Debug.Log($"Build_Manager: Time scaled to {Time.timeScale} for placement.");
+    }
+
+    // Helper: restore original time scale
+    private void RestoreTimeScale()
+    {
+        if (!timeScaleModified) return;
+        Time.timeScale = previousTimeScale;
+        Time.fixedDeltaTime = originalFixedDeltaTime;
+        timeScaleModified = false;
+        Debug.Log($"Build_Manager: Time restored to {Time.timeScale}.");
     }
 
     // summary: Confirm and place the currently previewed prefab into the scene if valid.
